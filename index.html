@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="LPA-CWM: A Learned Physical Adjudicator for Motion Reasoning with Counterfactual World Models." />
+  <meta name="theme-color" content="#07090d" />
+  <meta property="og:title" content="LPA-CWM" />
+  <meta property="og:description" content="A Learned Physical Adjudicator for Motion Reasoning with Counterfactual World Models" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://LPA-CWM.github.io" />
+  <meta property="og:image" content="assets/figures/figure1_overview.png" />
+  <link rel="canonical" href="https://LPA-CWM.github.io" />
+  <title>LPA-CWM | Learned Physical Adjudicator for Counterfactual World Models</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" />
+
+  <style>
+    :root{
+      --bg:#06080c;
+      --bg2:#0a0e15;
+      --surface:rgba(18,23,32,.78);
+      --surface2:rgba(11,15,22,.94);
+      --line:rgba(255,255,255,.095);
+      --line2:rgba(255,255,255,.16);
+      --text:#f5f7fb;
+      --muted:#9ba6b7;
+      --cyan:#55d7ff;
+      --blue:#6e8dff;
+      --violet:#9c7cff;
+      --amber:#ffbd66;
+      --green:#65efad;
+      --red:#ff6f78;
+      --shadow:0 26px 84px rgba(0,0,0,.34);
+      --radius:22px;
+      --page:min(70vw,1320px);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:92px;background:var(--bg)}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      line-height:1.56;
+      overflow-x:hidden;
+      background:
+        radial-gradient(900px 520px at 8% 0%,rgba(86,213,255,.08),transparent 60%),
+        radial-gradient(800px 500px at 94% 12%,rgba(154,124,255,.07),transparent 62%),
+        var(--bg);
+    }
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+    ::selection{background:rgba(85,215,255,.24)}
+
+    .progress-track{position:fixed;z-index:120;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,.04)}
+    .progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--amber));box-shadow:0 0 18px rgba(85,215,255,.52)}
+
+    .nav-shell{position:fixed;z-index:110;top:3px;left:0;right:0;padding:12px 2vw;pointer-events:none}
+    .nav{
+      pointer-events:auto;
+      margin:auto;
+      width:var(--page);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      padding:9px 12px 9px 18px;
+      border:1px solid var(--line);
+      background:rgba(7,10,15,.72);
+      backdrop-filter:blur(18px);
+      border-radius:999px;
+      box-shadow:0 10px 36px rgba(0,0,0,.22);
+    }
+    .brand{font-weight:850;letter-spacing:-.035em;white-space:nowrap}
+    .brand span{color:var(--cyan)}
+    .nav-links{display:flex;gap:4px;overflow:auto;scrollbar-width:none}
+    .nav-links::-webkit-scrollbar{display:none}
+    .nav-link{padding:8px 11px;border-radius:999px;color:var(--muted);font-size:.78rem;font-weight:720;white-space:nowrap;transition:.2s}
+    .nav-link:hover,.nav-link.active{color:var(--text);background:rgba(255,255,255,.07)}
+
+    .hero{
+      position:relative;
+      min-height:100svh;
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      padding:128px 4vw 76px;
+      border-bottom:1px solid var(--line);
+    }
+    #hero-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.9}
+    .hero-vignette{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,8,12,.12),rgba(6,8,12,.2) 55%,var(--bg) 100%),radial-gradient(circle at 50% 36%,transparent 0,rgba(6,8,12,.18) 60%,rgba(6,8,12,.72) 100%);pointer-events:none}
+    .hero-content{position:relative;z-index:2;width:min(1160px,94vw);text-align:center}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;border:1px solid rgba(85,215,255,.2);background:rgba(85,215,255,.055);color:#bfefff;font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .title{margin:20px auto 12px;font-size:clamp(3rem,7.3vw,7.4rem);line-height:.87;letter-spacing:-.075em;font-weight:900;text-wrap:balance}
+    .title .wm{background:linear-gradient(105deg,#fff 20%,#b8f1ff 50%,#a697ff 84%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .subtitle{max-width:900px;margin:18px auto 0;font-size:clamp(1.05rem,2vw,1.6rem);line-height:1.24;color:#c8d0dc;letter-spacing:-.02em}
+    .authors{margin:18px auto 0;max-width:1060px;display:flex;flex-wrap:wrap;justify-content:center;gap:7px 18px;font-size:.94rem;font-weight:730;color:#f2f5f9}
+    .authors span{white-space:nowrap}
+    .affiliations{margin:14px auto 0;max-width:1040px;color:var(--muted);font-size:.76rem;line-height:1.75}
+    .author-note{margin-top:6px;color:#8fa0b4;font-size:.72rem}
+
+    .hero-actions{margin-top:28px;display:flex;flex-wrap:wrap;justify-content:center;gap:22px}
+    .pill-link{
+      position:relative;
+      display:inline-flex;align-items:center;gap:8px;
+      padding:11px 17px;border-radius:999px;
+      border:1px solid var(--button-border,var(--line2));
+      background:var(--button-bg,rgba(14,18,26,.72));
+      color:var(--button-fg,#eef4fb);font-weight:800;font-size:.87rem;
+      box-shadow:0 12px 28px rgba(0,0,0,.2);
+      transition:transform .2s,border-color .2s,filter .2s,box-shadow .2s;
+    }
+    .pill-link i{font-size:1.08rem;line-height:1}
+    .pill-link:hover{transform:translateY(-3px);border-color:var(--accent,var(--cyan));filter:brightness(1.06);box-shadow:0 16px 34px rgba(0,0,0,.28)}
+    .pill-link.todo::after{content:"TODO";position:absolute;top:-7px;right:-6px;font-size:.48rem;padding:2px 5px;background:#171c26;border:1px solid var(--line);border-radius:99px;color:#758096}
+
+    .scroll-hint{position:absolute;z-index:3;bottom:24px;left:50%;transform:translateX(-50%);font-size:.7rem;text-transform:uppercase;letter-spacing:.18em;color:#7f8998;display:grid;gap:7px;justify-items:center}
+    .scroll-hint i{width:1px;height:34px;background:linear-gradient(var(--cyan),transparent);animation:pulseLine 1.8s infinite}
+    @keyframes pulseLine{50%{transform:scaleY(.55);opacity:.45}}
+
+    .page{width:var(--page);margin:auto}
+    .section{padding:100px 0;border-bottom:2px solid rgba(255,255,255,.19)}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:34px;margin-bottom:34px}
+    .kicker{font-size:clamp(1.28rem,1.55vw,1.72rem);font-weight:900;letter-spacing:.11em;text-transform:uppercase;color:var(--cyan);line-height:1}
+    .section h2{font-size:clamp(1.04rem,1.45vw,1.38rem);line-height:1.25;letter-spacing:-.018em;margin:9px 0 0;color:#aab5c5;font-weight:650;max-width:900px}
+    .section-note{max-width:520px;color:var(--muted);font-size:.88rem;text-align:right}
+
+    .card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(17,22,31,.82),rgba(10,14,20,.88));border-radius:var(--radius);box-shadow:var(--shadow);transition:transform .24s,border-color .24s,box-shadow .24s}
+    .card:hover{transform:translateY(-4px);border-color:rgba(85,215,255,.24);box-shadow:0 30px 90px rgba(0,0,0,.42)}
+    .paper-figure{padding:18px;background:rgba(12,16,23,.84)}
+    .figure-frame{background:#fff;border-radius:15px;overflow:hidden;padding:10px;display:grid;place-items:center}
+    .figure-frame img{display:block;width:100%;height:auto;max-height:760px;object-fit:contain}
+    .figure-caption{padding:17px 4px 2px;color:#cbd4e0;font-size:.88rem}
+    .figure-caption b{color:#fff}
+
+    .overview-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+    .chip{padding:13px 15px;border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:14px;color:#aeb9c9;font-size:.78rem}
+    .chip b{display:block;color:#eef3f8;font-size:.88rem;margin-bottom:2px}
+
+    .method-grid{display:grid;grid-template-columns:1.4fr .6fr;gap:16px;align-items:stretch}
+    .method-side{display:grid;gap:12px}
+    .mini-card{padding:20px}
+    .mini-card .label{font-size:.65rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px}
+    .mini-card h3{margin:0 0 8px;font-size:1.02rem}
+    .mini-card p{margin:0;color:var(--muted);font-size:.82rem}
+
+    .coming{min-height:230px;display:grid;place-items:center;border:1px dashed rgba(255,255,255,.15);border-radius:var(--radius);background:rgba(255,255,255,.018);transition:transform .24s,border-color .24s,background .24s,box-shadow .24s}
+    .coming:hover{transform:translateY(-3px);border-color:rgba(85,215,255,.26);background:rgba(85,215,255,.025);box-shadow:0 18px 48px rgba(0,0,0,.18)}
+    .coming-inner{text-align:center;color:#768295}
+    .coming-inner i{font-size:1.2rem;color:#526173;margin-bottom:8px}
+    .coming-inner b{display:block;color:#9ba8b9;font-size:.9rem;letter-spacing:.08em;text-transform:uppercase}
+    .coming-inner span{font-size:.72rem}
+
+    .footer{padding:36px 0 58px;color:#6f7b8d;font-size:.72rem;text-align:center}
+    .back-top{width:100%;border:0;border-top:1px solid var(--line);background:linear-gradient(90deg,#070a0f,#0b1018,#070a0f);color:#aab5c5;padding:24px;cursor:pointer;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    .back-top:hover{color:#fff;background:#0d121a}
+
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .65s,transform .65s}
+    .reveal.visible{opacity:1;transform:none}
+
+    @media(max-width:980px){
+      .section-head{align-items:start;flex-direction:column}.section-note{text-align:left}
+      .method-grid{grid-template-columns:1fr}
+      .overview-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:700px){
+      .nav{padding-left:14px}.brand{font-size:.84rem}.nav-link{font-size:.7rem;padding:7px 9px}
+      .hero{padding-top:115px}.title{font-size:clamp(3.4rem,18vw,6rem)}
+      .subtitle{font-size:1.15rem}.authors{font-size:.86rem;gap:5px 12px}.affiliations{font-size:.68rem}
+      :root{--page:92vw}.page{width:var(--page)}.section{padding:74px 0}.paper-figure{padding:9px}.figure-frame{padding:5px}
+      .kicker{font-size:1.22rem}.section h2{font-size:1rem}.overview-strip{grid-template-columns:1fr}.pill-link{padding:9px 12px;font-size:.76rem}
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+  </style>
+</head>
+<body>
+  <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+
+  <div class="nav-shell">
+    <nav class="nav" aria-label="Project page sections">
+      <a class="brand" href="#home">LPA<span>-CWM</span></a>
+      <div class="nav-links" id="navLinks">
+        <a class="nav-link" href="#overview">Overview</a>
+        <a class="nav-link" href="#method">Method</a>
+        <a class="nav-link" href="#cmc">CMC</a>
+        <a class="nav-link" href="#results">Results</a>
+        <a class="nav-link" href="#qualitative">Qualitative</a>
+        <a class="nav-link" href="#ablation">Ablations</a>
+        <a class="nav-link" href="#resources">Models & Data</a>
+        <a class="nav-link" href="#citation">Citation</a>
+      </div>
+    </nav>
+  </div>
+
+  <header class="hero" id="home">
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+    <div class="hero-vignette"></div>
+
+    <div class="hero-content">
+      <div class="eyebrow">Counterfactual World Models · Motion Reasoning · Physical Adjudication</div>
+      <h1 class="title">LPA<span class="wm">-CWM</span></h1>
+      <div class="subtitle">A Learned Physical Adjudicator for Motion Reasoning with Counterfactual World Models</div>
+
+      <div class="authors">
+        <span>Kunwei Wu<sup>1,*</sup></span>
+        <span>Xiang Liu<sup>2,*</sup></span>
+        <span>Guocai Yao<sup>3</sup></span>
+        <span>Junming Chen<sup>4</sup></span>
+        <span>Zhikang Chen<sup>5</sup></span>
+        <span>Min Zhang<sup>6</sup></span>
+        <span>Pengwei Wang<sup>3</sup></span>
+        <span>Sen Cui<sup>2,†</sup></span>
+      </div>
+      <div class="affiliations">
+        <sup>1</sup>National University of Singapore &nbsp;·&nbsp;
+        <sup>2</sup>Tsinghua University &nbsp;·&nbsp;
+        <sup>3</sup>Beijing Academy of Artificial Intelligence &nbsp;·&nbsp;
+        <sup>4</sup>Facebook &nbsp;·&nbsp;
+        <sup>5</sup>University of Oxford &nbsp;·&nbsp;
+        <sup>6</sup>East China Normal University
+      </div>
+      <div class="author-note"><sup>*</sup>Equal contribution &nbsp;&nbsp; <sup>†</sup>Project Leader & Corresponding Author</div>
+
+      <div class="hero-actions">
+        <!-- TODO: replace href="#" with public release links. -->
+        <a class="pill-link todo" style="--accent:#ef6a67;--button-bg:#fde8e7;--button-border:#f4b8b4;--button-fg:#b53631" href="#" target="_blank" rel="noopener" data-todo-link><i class="ai ai-arxiv" aria-hidden="true"></i> arXiv</a>
+        <a class="pill-link todo" style="--accent:#5b91ff;--button-bg:#e8f1ff;--button-border:#b9d2ff;--button-fg:#245bd4" href="#" target="_blank" rel="noopener" data-todo-link><i class="fa-solid fa-file-pdf" aria-hidden="true"></i> Paper</a>
+        <a class="pill-link todo" style="--accent:#7a7a7a;--button-bg:#242424;--button-border:#3d3d3d;--button-fg:#f7f7f7" href="#" target="_blank" rel="noopener" data-todo-link><i class="fa-brands fa-github" aria-hidden="true"></i> Code</a>
+        <a class="pill-link todo" style="--accent:#f2b841;--button-bg:#fff2cc;--button-border:#f3d57c;--button-fg:#6b5219" href="#" target="_blank" rel="noopener" data-todo-link><span aria-hidden="true">🤗</span> Checkpoints</a>
+        <a class="pill-link todo" style="--accent:#f2b841;--button-bg:#fff2cc;--button-border:#f3d57c;--button-fg:#6b5219" href="#" target="_blank" rel="noopener" data-todo-link><span aria-hidden="true">🤗</span> Datasets</a>
+      </div>
+    </div>
+
+    <a href="#overview" class="scroll-hint"><span>Explore</span><i></i></a>
+  </header>
+
+  <main class="page">
+    <section class="section reveal" id="overview">
+      <div class="section-head">
+        <div><div class="kicker">01 · Overview</div><h2>Learn which counterfactual motion evidence to trust.</h2></div>
+        <div class="section-note">Uniform CWM treats responses from different target-frame masks equally. LPA-CWM instead learns candidate reliability and uses the weighted evidence to recover more coherent motion.</div>
+      </div>
+
+      <div class="paper-figure card">
+        <div class="figure-frame"><img src="assets/figures/figure1_overview.png" alt="Figure 1: overview of LPA-CWM and the CMC benchmark" /></div>
+        <div class="figure-caption"><b>Figure 1 · An introduction of our work.</b> LPA identifies reliable counterfactual motion evidence, improving trajectory coherence under drift, competing motion, and appearance changes; CMC evaluates localization, completeness, visibility, and continuity.</div>
+      </div>
+
+      <div class="overview-strip">
+        <div class="chip"><b>Frozen backbone</b>CWM predictor and intervention generator remain fixed.</div>
+        <div class="chip"><b>Lightweight LPA</b>Only a 3.0M-parameter adjudicator is trained.</div>
+        <div class="chip"><b>Reliability learning</b>Candidate responses receive learned relative weights.</div>
+        <div class="chip"><b>CMC benchmark</b>Localization, completeness, visibility, and continuity.</div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="method">
+      <div class="section-head">
+        <div><div class="kicker">02 · Method</div><h2>Analytic and learned adjudication over frozen CWM candidates.</h2></div>
+        <div class="section-note">APA-CWM provides a training-free physical reference, while LPA-CWM learns relative candidate reliability from dense MOVi-F trajectories and applies the resulting weights before localized decoding and one CWM re-evaluation.</div>
+      </div>
+
+      <div class="method-grid">
+        <div class="paper-figure card">
+          <div class="figure-frame"><img src="assets/figures/figure2_method.png" alt="Figure 2: overview of APA-CWM and LPA-CWM" /></div>
+          <div class="figure-caption"><b>Figure 2 · Overview of APA-CWM and LPA-CWM.</b> A frozen CWM produces candidate responses. APA uses NSG-based neighborhood scores, whereas LPA encodes visual context, response structure, frame context, and candidate statistics with set-based reasoning.</div>
+        </div>
+
+        <div class="method-side">
+          <article class="mini-card card">
+            <div class="label">APA-CWM</div>
+            <h3>Analytic Physical Adjudicator</h3>
+            <p>Training-free candidate weighting from a frozen ADM / NSG physical-consistency cue.</p>
+          </article>
+          <article class="mini-card card">
+            <div class="label">LPA-CWM</div>
+            <h3>Learned Physical Adjudicator</h3>
+            <p>Candidate-specific tokens are jointly compared by a Set Transformer and supervised using MOVi-F endpoint errors.</p>
+          </article>
+          <article class="mini-card card">
+            <div class="label">Inference</div>
+            <h3>Weighted response → refinement</h3>
+            <p>Weighted responses are locally decoded, followed by one paired CWM re-evaluation to obtain refined motion.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="cmc">
+      <div class="section-head"><div><div class="kicker">03 · CMC Benchmark</div><h2>Completeness-aware Motion Correspondence.</h2></div></div>
+      <div class="coming"><div class="coming-inner"><i class="fa-regular fa-clock"></i><b>Coming soon</b><span>TODO · benchmark visualization / metric design / figure assets</span></div></div>
+    </section>
+
+    <section class="section reveal" id="results">
+      <div class="section-head"><div><div class="kicker">04 · Quantitative Results</div><h2>DAVIS, Kinetics, and TAP-Vid First.</h2></div></div>
+      <div class="coming"><div class="coming-inner"><i class="fa-regular fa-clock"></i><b>Coming soon</b><span>TODO · main tables / plots / interactive result views</span></div></div>
+    </section>
+
+    <section class="section reveal" id="qualitative">
+      <div class="section-head"><div><div class="kicker">05 · Qualitative Results</div><h2>Motion correspondence in the wild.</h2></div></div>
+      <div class="coming"><div class="coming-inner"><i class="fa-regular fa-clock"></i><b>Coming soon</b><span>TODO · videos / tracking comparisons / manipulation examples</span></div></div>
+    </section>
+
+    <section class="section reveal" id="ablation">
+      <div class="section-head"><div><div class="kicker">06 · Ablation Studies</div><h2>What makes learned adjudication work?</h2></div></div>
+      <div class="coming"><div class="coming-inner"><i class="fa-regular fa-clock"></i><b>Coming soon</b><span>TODO · mask count / re-evaluation / architecture / objective / weighting behavior</span></div></div>
+    </section>
+
+    <section class="section reveal" id="resources">
+      <div class="section-head"><div><div class="kicker">07 · Models & Data</div><h2>Code, checkpoints, and reproducibility assets.</h2></div></div>
+      <div class="coming"><div class="coming-inner"><i class="fa-regular fa-clock"></i><b>Coming soon</b><span>TODO · GitHub repository / trained weights / configs / processed data</span></div></div>
+    </section>
+
+    <section class="section reveal" id="citation">
+      <div class="section-head"><div><div class="kicker">08 · Citation</div><h2>BibTeX and acknowledgements.</h2></div></div>
+      <div class="coming"><div class="coming-inner"><i class="fa-regular fa-clock"></i><b>Coming soon</b><span>TODO · arXiv BibTeX / acknowledgements / contact links</span></div></div>
+    </section>
+  </main>
+
+  <button class="back-top" id="backTop">↑ Back to top · LPA-CWM</button>
+  <footer class="page footer">LPA-CWM · 2026 · Static GitHub Pages project page</footer>
+
+  <script>
+    const progress = document.getElementById('progress');
+    const navLinks = [...document.querySelectorAll('.nav-link')];
+    const sections = navLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+
+    function updateScrollUI(){
+      const doc = document.documentElement;
+      const max = Math.max(1, doc.scrollHeight - innerHeight);
+      progress.style.width = `${Math.min(100, Math.max(0, scrollY / max * 100))}%`;
+
+      let active = sections[0];
+      for(const section of sections){ if(section.getBoundingClientRect().top <= 150) active = section; }
+      navLinks.forEach(a => a.classList.toggle('active', active && a.getAttribute('href') === `#${active.id}`));
+    }
+    addEventListener('scroll', updateScrollUI, {passive:true});
+    addEventListener('resize', updateScrollUI);
+    updateScrollUI();
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+    }, {threshold:.08});
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    document.querySelectorAll('[data-todo-link]').forEach(el => {
+      el.addEventListener('click', e => {
+        e.preventDefault();
+        const old = el.dataset.oldText || el.innerHTML;
+        el.dataset.oldText = old;
+        el.innerHTML = '<i class="fa-regular fa-clock"></i> Coming soon';
+        setTimeout(() => { el.innerHTML = old; }, 1200);
+      });
+    });
+
+    document.getElementById('backTop').addEventListener('click', () => scrollTo({top:0, behavior:'smooth'}));
+
+    // Action-conditioned trajectory / future-state line field from the reference page.
+    (() => {
+      const canvas = document.getElementById('hero-canvas');
+      const ctx = canvas.getContext('2d');
+      let width, height, mouseX = .5, mouseY = .5, time = 0;
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      const paths = Array.from({length:5}, (_, i) => ({
+        y:.12 + i * .17 + Math.random() * .03,
+        phase:Math.random() * Math.PI * 2,
+        speed:.28 + Math.random() * .55,
+        amplitude:.025 + Math.random() * .045,
+        alpha:.21 + Math.random() * .14,
+        hue:i % 3
+      }));
+
+      function resizeCanvas(){
+        width = canvas.clientWidth;
+        height = canvas.clientHeight;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      addEventListener('resize', resizeCanvas);
+      addEventListener('pointermove', event => {
+        mouseX = event.clientX / innerWidth;
+        mouseY = event.clientY / innerHeight;
+      }, {passive:true});
+
+      function draw(){
+        time += .008;
+        ctx.clearRect(0, 0, width, height);
+        ctx.save();
+        ctx.translate((mouseX - .5) * 8, (mouseY - .5) * 6);
+        const colors = ['85,215,255', '155,124,255', '255,189,102'];
+
+        paths.forEach((path, index) => {
+          const baseline = path.y * height;
+          ctx.beginPath();
+          for(let step = 0; step <= 80; step++){
+            const x = step / 80 * width;
+            const bend = Math.sin(step * .15 + path.phase + time * path.speed) * path.amplitude * height;
+            const attract = (.5 - Math.abs(step / 80 - .5)) * 18 * Math.sin(time + index);
+            const y = baseline + bend + attract;
+            if(step === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+          }
+          ctx.strokeStyle = `rgba(${colors[path.hue]},${path.alpha})`;
+          ctx.lineWidth = index % 4 === 0 ? 2.6 : 1.7;
+          ctx.stroke();
+
+          if(index % 7 === 0){
+            const q = (time * path.speed * .22 + path.phase / (Math.PI * 2)) % 1;
+            const x = q * width;
+            const y = baseline + Math.sin(q * 80 * .15 + path.phase + time * path.speed) * path.amplitude * height;
+            ctx.fillStyle = `rgba(${colors[path.hue]},.34)`;
+            ctx.beginPath();
+            ctx.arc(x, y, 2.4, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        });
+
+        ctx.strokeStyle = 'rgba(85,215,255,.14)';
+        for(let i = 0; i < 4; i++) ctx.strokeRect(width * .09 + i * 16, height * .3 + i * 9, 120, 74);
+        ctx.strokeStyle = 'rgba(155,124,255,.15)';
+        for(let i = 0; i < 5; i++) ctx.strokeRect(width * .79 + i * 18, height * .27 + i * 10, 130, 80);
+        ctx.restore();
+        requestAnimationFrame(draw);
+      }
+
+      resizeCanvas();
+      draw();
+    })();
+  </script>
+</body>
+</html>
