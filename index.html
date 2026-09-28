@@ -46,36 +46,22 @@ section{padding:100px 0;border-top:1px solid var(--line);scroll-margin-top:0}.se
 /* Compact single-point comparisons: three scenes per category, five or eight methods. */
 .theme button{display:inline-flex;align-items:center;gap:5px}.theme-icon{display:inline-flex;width:15px;height:15px}.theme-icon svg{width:100%;height:100%}
 #single-point{padding:20px 0;scroll-margin-top:-32px}
-#single-point .wrap,#analysis .wrap{width:min(1440px,calc(100% - 64px))}
-#single-point .section-head{margin-bottom:12px}
-#single-point .chapter{margin-bottom:4px;font-size:11px}
-#single-point .section-head h2{font-size:clamp(26px,2.2vw,32px)}
 #single-point .gallery-controls{gap:12px;margin-bottom:12px;flex-wrap:nowrap}
-#single-point .pill-group{gap:3px;padding:3px;border-radius:12px}
-#single-point .pill-group button{font-size:12px;padding:7px 11px}
 .method-toggle{border-color:var(--accent);flex-shrink:0}
 #single-point .method-toggle button[aria-pressed=true]{background:var(--accent);color:var(--surface);border-color:var(--accent)}
 #single-point .single-episodes{gap:8px}
 #single-point .episode{padding:6px 8px;border-radius:12px}
-#single-point .episode-header{padding:0 2px 5px;min-height:25px}
-#single-point .episode-name{font-size:12px;margin:0}
-.episode-actions{display:flex;gap:6px}
-#single-point .replay{font-size:10px;padding:2px 8px;border-radius:6px}
+#single-point .episode-header{padding:0 2px 8px}
+#single-point .episode-name{margin:0}
+.episode-actions{display:flex;gap:8px}
 #single-point .baseline-strip{grid-template-columns:repeat(var(--method-count),minmax(0,1fr));gap:6px;padding:0;margin:0;overflow:visible}
 #single-point .video-tile{border-radius:7px}
 #single-point .video-tile:hover{transform:none}
-#single-point .video-title{font-size:11px;line-height:1.2;padding:4px 6px;white-space:nowrap}
-#single-point .video-title.ours-label{background:var(--tint)}
-#single-point .video-title.ours-label span+span{font-size:9px}
-#single-point .video-slot{aspect-ratio:auto;height:clamp(80px,calc((100svh - 465px)/3),180px)}
-#singleGallery[data-methods=all] .video-slot{height:clamp(65px,calc((100svh - 490px)/3),138px)}
-#singleGallery[data-methods=all] .video-title{font-size:10px;padding:4px}
-#singleGallery[data-methods=all] .ours-label span+span{display:none}
+#single-point .video-slot{aspect-ratio:auto;height:clamp(80px,calc((100svh - 555px)/3),180px)}
+#singleGallery[data-methods=all] .video-slot{height:clamp(55px,calc((100svh - 600px)/3),138px)}
 #analysis .experiments{display:block}
 #analysis .experiment-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-bottom:16px}
 #analysis .experiment-tab{padding:12px 10px;grid-template-columns:20px minmax(0,1fr)}
-#analysis .experiment-tab b{font-size:12px}
-#analysis .experiment-tab small{font-size:11px}
 #analysis .experiment-tab:hover{transform:translateY(-2px)}
 #analysis .experiment-display{min-height:0}
 #analysis .small-table{min-width:1030px;font-size:12px}
@@ -85,8 +71,8 @@ section{padding:100px 0;border-top:1px solid var(--line);scroll-margin-top:0}.se
 #analysis .small-table th:first-child{text-align:left}
 #analysis .small-table td:nth-child(9){border-left:1px solid var(--line)}
 #analysis .small-table thead tr:first-child th:last-child{border-left:1px solid var(--line)}
-@media(max-width:1000px){#single-point .gallery-controls{flex-wrap:wrap}#single-point .pill-group button{font-size:11px;padding:6px 8px}#single-point .video-title{font-size:10px}#single-point .ours-label span+span{display:none}#analysis .experiment-nav{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:600px){#single-point{scroll-margin-top:-40px}#single-point .wrap,#analysis .wrap{width:94vw}#single-point .section-head h2{font-size:27px}#single-point .gallery-controls{gap:8px}#singleFilters{width:100%;justify-content:space-between}#single-point #singleFilters button{font-size:9px;padding:6px 4px;gap:2px}#single-point .baseline-strip{gap:3px}#single-point .video-title{font-size:8px;padding:4px 2px;min-height:27px;white-space:normal;align-items:center;justify-content:center;text-align:center}#singleGallery[data-methods=all] .video-title{font-size:7px;padding:3px 1px;overflow-wrap:anywhere;min-height:32px}#single-point .video-slot{height:auto;aspect-ratio:4/3}#singleGallery[data-methods=all] .video-slot{height:auto}#single-point .episode{padding:6px 4px}#analysis .experiment-nav{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:1000px){#single-point .gallery-controls{flex-wrap:wrap}#analysis .experiment-nav{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){#single-point{scroll-margin-top:-40px}#single-point .gallery-controls{gap:8px}#singleFilters{width:100%}#single-point .baseline-strip{gap:3px}#single-point .video-slot{height:auto;aspect-ratio:16/9}#singleGallery[data-methods=all] .video-slot{height:auto}#single-point .episode{padding:8px}#analysis .experiment-nav{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 </style>
 </head>
@@ -281,7 +267,7 @@ if(MEDIA.heroVideo){const v=attachVideo($('#heroBackdrop'),MEDIA.heroVideo,'Ambi
 function overview(mode){clearVideos($('#overviewStage'));const isVideo=mode==='video';$('#showVideo').setAttribute('aria-pressed',String(isVideo));$('#showImage').setAttribute('aria-pressed',String(!isVideo));$('#overviewLabel').textContent=isVideo?'Overview film':'Research overview';$('#overviewHint').textContent=isVideo?(MEDIA.overviewVideo?'Motion reasoning in action':'Video preview · Coming soon'):'Figure 1 · From the manuscript';$('#overviewStage').innerHTML=isVideo?'<div class="placeholder"><div class="play-orbit" aria-hidden="true">▷</div><p class="placeholder-title">Motion, made visible.</p><p class="placeholder-note">TODO · Overview video</p><p class="placeholder-note">Switch to Image to explore the paper overview</p></div>':'<img src="'+escaped(MEDIA.overviewImage)+'" alt="Paper overview of motion tracking failures, the Learned Physical Adjudicator, and the CMC evaluation protocol.">';if(isVideo&&MEDIA.overviewVideo)attachVideo($('#overviewStage'),MEDIA.overviewVideo,'Overview film')}
 $('#showVideo').onclick=()=>overview('video');$('#showImage').onclick=()=>overview('image');overview(MEDIA.overviewVideo?'video':'image');
 let multiFilter='all',multiPage=0,singleFilter='drift',singleMethods='featured';
-function tile(method,scene){const [key,label]=method;return '<div class="video-tile"><div class="video-title '+(key==='lpa'?'ours-label':'')+'"><span>'+escaped(label)+'</span>'+(key==='lpa'?'<span>Ours</span>':'')+'</div><div class="video-slot" data-key="'+key+'"><span class="slot-icon" aria-hidden="true">▷</span><span class="slot-label">TODO · VIDEO</span></div></div>'}
+function tile(method,scene,showTitle=true){const [key,label]=method;return '<div class="video-tile">'+(showTitle?'<div class="video-title '+(key==='lpa'?'ours-label':'')+'"><span>'+escaped(label)+'</span>'+(key==='lpa'?'<span>Ours</span>':'')+'</div>':'')+'<div class="video-slot" data-key="'+key+'"><span class="slot-icon" aria-hidden="true">▷</span><span class="slot-label">TODO · VIDEO</span></div></div>'}
 function renderEpisode(scene,methods,kind){const article=document.createElement('article');article.className='episode';article.innerHTML='<div class="episode-header"><div><span class="episode-id">'+escaped(scene.id)+' / PREVIEW SLOT</span><h3 class="episode-name">'+escaped(scene.title)+'</h3></div><button class="replay" aria-label="Replay '+escaped(scene.title)+'">↻ Replay</button></div><div class="'+(kind==='multi'?'media-pair':'baseline-strip')+'">'+methods.map(m=>tile(m,scene)).join('')+'</div>';methods.forEach(([key,label])=>{if(scene.videos[key])attachVideo(article.querySelector('[data-key="'+key+'"]'),scene.videos[key],scene.title+' — '+label)});article.querySelector('.replay').onclick=()=>{const videos=[...article.querySelectorAll('video')];if(!videos.length)return notify('Videos are being prepared.');videos.forEach(v=>{v.currentTime=0;v.play().catch(()=>{})})};return article}
 function pager(el,page,pages,start,end,count,change){
  if(!el.querySelector('input'))el.innerHTML='<div class="pager-top"><span class="page-count" aria-live="polite"></span><div class="pager-buttons"></div></div><label class="page-scrubber"><span>DRAG TO EXPLORE</span><input type="range" min="1" step="1" aria-label="Gallery page"><output></output></label>';
@@ -294,7 +280,7 @@ function pager(el,page,pages,start,end,count,change){
 function renderMulti(){const list=MULTI_SCENES.filter(s=>multiFilter==='all'||s.category===multiFilter),size=4,pages=Math.max(1,Math.ceil(list.length/size));multiPage=Math.min(multiPage,pages-1);clearVideos($('#multiGallery'));$('#multiGallery').replaceChildren(...list.slice(multiPage*size,(multiPage+1)*size).map(s=>renderEpisode(s,[['uniform','Uniform CWM'],['lpa','LPA-CWM']],'multi')));pager($('#multiPager'),multiPage,pages,multiPage*size+1,Math.min((multiPage+1)*size,list.length),list.length,p=>{multiPage=p;renderMulti()})}
 function renderSingleEpisode(scene,methods){
  const article=document.createElement('article');article.className='episode';
- article.innerHTML='<div class="episode-header"><h3 class="episode-name">'+escaped(scene.title)+'</h3><div class="episode-actions"><button class="replay playback" aria-label="Pause '+escaped(scene.title)+'">Ⅱ Pause</button><button class="replay restart" aria-label="Replay '+escaped(scene.title)+'">↻ Replay</button></div></div><div class="baseline-strip" style="--method-count:'+methods.length+'">'+methods.map(m=>tile(m,scene)).join('')+'</div>';
+ article.innerHTML='<div class="episode-header"><h3 class="episode-name">'+escaped(scene.title)+'</h3><div class="episode-actions"><button class="replay playback" aria-label="Pause '+escaped(scene.title)+'">Ⅱ Pause</button><button class="replay restart" aria-label="Replay '+escaped(scene.title)+'">↻ Replay</button></div></div><div class="baseline-strip" style="--method-count:'+methods.length+'">'+methods.map(m=>tile(m,scene,false)).join('')+'</div>';
  const videos=methods.map(([key,label])=>{const v=attachVideo(article.querySelector('[data-key="'+key+'"]'),scene.videos[key],scene.title+' — '+label);v.controls=false;return v});
  let playing=!reduced;
  const control=article.querySelector('.playback');
