@@ -60,8 +60,14 @@ section{padding:100px 0;border-top:1px solid var(--line);scroll-margin-top:0}.se
 #single-point .video-slot{aspect-ratio:auto;height:clamp(80px,calc((100svh - 555px)/3),180px)}
 #singleGallery[data-methods=all] .video-slot{height:clamp(55px,calc((100svh - 600px)/3),138px)}
 #analysis .experiments{display:block}
-#analysis .experiment-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-bottom:16px}
-#analysis .experiment-tab{padding:12px 10px;grid-template-columns:20px minmax(0,1fr)}
+#analysis .experiment-nav{display:flex;flex-direction:row;flex-wrap:wrap;margin-bottom:16px}
+#analysis .experiment-tab{flex:1 1 auto;width:max-content;max-width:100%;min-width:0;padding:16px 20px;grid-template-columns:minmax(0,1fr);row-gap:10px;align-content:start}
+#analysis .experiment-tab>span{padding:0;line-height:1.4}
+#analysis .experiment-tab>div{display:grid;gap:6px}
+#analysis .experiment-tab b,#analysis .experiment-tab small{display:block;margin:0;white-space:nowrap;line-height:1.5}
+@media(max-width:1699px){#analysis .experiment-tab{flex-basis:calc((100% - 20px)/3)}}
+@media(max-width:850px){#analysis .experiment-tab{flex-basis:calc((100% - 10px)/2)}}
+@media(max-width:560px){#analysis .experiment-tab{flex-basis:100%}}
 #analysis .experiment-tab:hover{transform:translateY(-2px)}
 #analysis .experiment-display{min-height:0}
 #analysis .small-table{min-width:1030px;font-size:12px}
@@ -71,8 +77,8 @@ section{padding:100px 0;border-top:1px solid var(--line);scroll-margin-top:0}.se
 #analysis .small-table th:first-child{text-align:left}
 #analysis .small-table td:nth-child(9){border-left:1px solid var(--line)}
 #analysis .small-table thead tr:first-child th:last-child{border-left:1px solid var(--line)}
-@media(max-width:1000px){#single-point .gallery-controls{flex-wrap:wrap}#analysis .experiment-nav{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:600px){#single-point{scroll-margin-top:-40px}#single-point .gallery-controls{gap:8px}#singleFilters{width:100%}#single-point .baseline-strip{gap:3px}#single-point .video-slot{height:auto;aspect-ratio:16/9}#singleGallery[data-methods=all] .video-slot{height:auto}#single-point .episode{padding:8px}#analysis .experiment-nav{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:1000px){#single-point .gallery-controls{flex-wrap:wrap}}
+@media(max-width:600px){#single-point{scroll-margin-top:-40px}#single-point .gallery-controls{gap:8px}#singleFilters{width:100%}#single-point .baseline-strip{gap:3px}#single-point .video-slot{height:auto;aspect-ratio:16/9}#singleGallery[data-methods=all] .video-slot{height:auto}#single-point .episode{padding:8px}}
 
 
 /* Multi-point tasks share the page width and playback controls with the other galleries. */
@@ -89,7 +95,7 @@ section{padding:100px 0;border-top:1px solid var(--line);scroll-margin-top:0}.se
 
 
 /* Clear, consistent navigation affordances. */
-#analysis .experiment-nav{padding:6px;gap:8px;border:1px solid var(--line);border-radius:17px;background:var(--soft)}
+#analysis .experiment-nav{padding:7px;gap:10px;border:1px solid var(--line);border-radius:17px;background:var(--soft)}
 #analysis .experiment-tab{border:1px solid var(--line);border-radius:11px;background:var(--surface);box-shadow:0 2px 6px #29375c0a}
 #analysis .experiment-tab b{font-weight:650}
 #analysis .experiment-tab:hover{border-color:var(--accent);background:var(--tint);box-shadow:0 8px 16px #263a6316;transform:translateY(-3px)}
