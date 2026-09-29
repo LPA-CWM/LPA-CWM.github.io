@@ -110,6 +110,15 @@ footer .back-top:hover,footer .back-top:focus-visible{background:var(--tint);tra
 @media(max-width:560px){.hero-foot{gap:14px;flex-wrap:wrap}footer .back-top{min-height:84px}}
 @media(prefers-reduced-motion:reduce){#analysis .experiment-tab:hover,footer .back-top:hover,footer .back-top:focus-visible{transform:none}}
 
+
+/* Overview film: preserve the source 1920 x 1080 frame at every viewport. */
+#overviewStage[data-mode="video"]{aspect-ratio:16/9;padding:0;background:#10131b}
+#overviewStage[data-mode="video"] video{width:100%;height:100%;object-fit:contain;padding:0}
+.overview-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.overview-sound{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:8px 14px;border:1px solid var(--line);border-radius:24px;background:var(--surface);color:var(--muted);font-size:12px}
+.overview-sound:hover,.overview-sound[aria-pressed="true"]{color:var(--accent);background:var(--tint)}
+.overview-sound svg{width:18px;height:18px;flex-shrink:0}
+.overview-sound[aria-pressed="false"] .sound-on,.overview-sound[aria-pressed="true"] .sound-off{display:none}
 </style>
 </head>
 <body>
@@ -117,7 +126,7 @@ footer .back-top:hover,footer .back-top:focus-visible{background:var(--tint);tra
 <header class="header"><div class="reading-track" aria-hidden="true"><div class="reading-progress" id="readingProgress"></div></div><nav class="nav wrap" aria-label="Main navigation"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"></span>LPA-CWM</a><div class="nav-links"><a href="#overview">Overview</a><a href="#method">Method</a><a href="#multi-point">Multi-point</a><a href="#single-point">Single-point</a><a href="#results">Results</a><a href="#analysis">Analysis</a><a href="#resources">Resources</a><a href="#citation">Citation</a></div><div class="theme" aria-label="Color theme"><button data-theme="light" aria-pressed="true"><span class="theme-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/></svg></span>Light</button><button data-theme="dark" aria-pressed="false"><span class="theme-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20.7 14.2A9 9 0 0 1 9.8 3.3a9 9 0 1 0 10.9 10.9Z"/></svg></span>Dark</button></div></nav></header>
 <main id="top">
 <div class="hero"><div class="hero-backdrop" id="heroBackdrop" aria-hidden="true"></div><div class="wrap"><div class="hero-inner"><div class="hero-top"><span class="status-dot"></span><span class="eyebrow">Counterfactual world models</span><span class="review">ICLR 2027 · Under review</span></div><h1>LPA<span>–</span>CWM<span>.</span></h1><h2 class="hero-tagline">Learning which motion to trust.</h2><div class="hero-bottom"><div><p class="paper-title">A Learned Physical Adjudicator for Motion Reasoning with Counterfactual World Models</p><p class="authors">Anonymous authors · Double-blind submission</p></div></div><div class="resource-buttons" aria-label="Project links"><a class="resource-button resource-arxiv" href="#resources" data-resource="arxiv"><span class="todo-badge">TODO</span><span class="ui-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 3 13 18M5 21 17 3M5 3l14 18"/></svg></span>arXiv</a><a class="resource-button resource-paper" href="#resources" data-resource="paper"><span class="todo-badge">TODO</span><span class="ui-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8M8 16h6"/></svg></span>Paper</a><a class="resource-button resource-code" href="#resources" data-resource="code"><span class="todo-badge">TODO</span><span class="ui-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1a11 11 0 0 0-3.48 21.44c.55.1.75-.24.75-.53v-2.05c-3.06.67-3.7-1.3-3.7-1.3-.5-1.28-1.22-1.62-1.22-1.62-1-.69.08-.68.08-.68 1.1.08 1.69 1.13 1.69 1.13.98 1.68 2.57 1.2 3.2.92.1-.72.39-1.2.7-1.48-2.44-.28-5.01-1.22-5.01-5.44 0-1.2.43-2.18 1.13-2.95-.12-.28-.49-1.4.11-2.92 0 0 .92-.3 3.02 1.13a10.5 10.5 0 0 1 5.5 0c2.1-1.43 3.02-1.13 3.02-1.13.6 1.52.23 2.64.11 2.92.7.77 1.13 1.75 1.13 2.95 0 4.23-2.57 5.16-5.02 5.43.4.35.74 1.01.74 2.04v3.03c0 .3.2.64.76.53A11 11 0 0 0 12 1Z"/></svg></span>Code</a><a class="resource-button resource-checkpoints" href="#resources" data-resource="checkpoints"><span class="todo-badge">TODO</span><span class="hf-icon" aria-hidden="true">🤗</span>Checkpoints</a><a class="resource-button resource-datasets" href="#resources" data-resource="datasets"><span class="todo-badge">TODO</span><span class="hf-icon" aria-hidden="true">🤗</span>Datasets</a></div><div class="hero-foot"><button class="replay" id="heroPlayback" aria-label="Pause background video">Ⅱ Pause background</button></div></div></div></div>
-<section id="overview"><div class="wrap"><div class="section-head"><div class="chapter">01 · Overview</div><div><h2>Not all motion evidence is equally reliable.</h2><p>A frozen world model generates possibilities. A learned adjudicator identifies the responses worth trusting.</p></div></div><div class="section-topline"><span class="eyebrow muted">The idea, at a glance</span><div class="pill-group" aria-label="Overview media"><button id="showVideo" aria-pressed="true"><span class="ui-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="13" height="14" rx="3"/><path d="m16 10 5-3v10l-5-3"/></svg></span>Video</button><button id="showImage" aria-pressed="false"><span class="ui-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m4 18 5-5 4 3 4-6 4 7"/></svg></span>Image</button></div></div><figure class="over-media"><div class="media-inner"><div class="overview-stage" id="overviewStage"></div></div><figcaption class="frame-meta"><strong id="overviewLabel">Overview film</strong><span id="overviewHint">Video preview · Coming soon</span></figcaption></figure><div class="overview-copy"><div class="overview-thesis"><span class="eyebrow accent">A shift in perspective</span><p class="lead">From uniform aggregation<br>to learned physical adjudication.</p><div class="evidence-tags"><span>Frozen world model</span><span>Learned reliability</span></div></div><div class="overview-explanation muted"><span class="eyebrow accent">Why reliability matters</span><p>Different target-frame masks produce motion responses with different levels of reliability. Averaging them equally can dilute the evidence that matters.</p><p>LPA-CWM compares an unordered set of candidates and learns relative reliability weights. The predictor and intervention generator stay frozen; only the lightweight adjudicator is trained.</p></div></div></div></section>
+<section id="overview"><div class="wrap"><div class="section-head"><div class="chapter">01 · Overview</div><div><h2>Not all motion evidence is equally reliable.</h2><p>A frozen world model generates possibilities. A learned adjudicator identifies the responses worth trusting.</p></div></div><div class="section-topline"><span class="eyebrow muted">The idea, at a glance</span><div class="overview-controls"><button class="overview-sound" id="overviewSound" type="button" aria-label="Turn sound on" title="Turn sound on" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path class="sound-off" d="m16 9 5 6m0-6-5 6"/><path class="sound-on" d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg><span id="overviewSoundLabel">Sound off</span></button><div class="pill-group" aria-label="Overview media"><button id="showVideo" aria-pressed="true"><span class="ui-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="13" height="14" rx="3"/><path d="m16 10 5-3v10l-5-3"/></svg></span>Video</button><button id="showImage" aria-pressed="false"><span class="ui-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m4 18 5-5 4 3 4-6 4 7"/></svg></span>Image</button></div></div></div><figure class="over-media"><div class="media-inner"><div class="overview-stage" id="overviewStage"></div></div><figcaption class="frame-meta"><strong id="overviewLabel">Overview film</strong><span id="overviewHint">Motion reasoning in action</span></figcaption></figure><div class="overview-copy"><div class="overview-thesis"><span class="eyebrow accent">A shift in perspective</span><p class="lead">From uniform aggregation<br>to learned physical adjudication.</p><div class="evidence-tags"><span>Frozen world model</span><span>Learned reliability</span></div></div><div class="overview-explanation muted"><span class="eyebrow accent">Why reliability matters</span><p>Different target-frame masks produce motion responses with different levels of reliability. Averaging them equally can dilute the evidence that matters.</p><p>LPA-CWM compares an unordered set of candidates and learns relative reliability weights. The predictor and intervention generator stay frozen; only the lightweight adjudicator is trained.</p></div></div></div></section>
 <section id="method"><div class="wrap"><div class="section-head"><div class="chapter">02 · Method</div><div><h2>Generate. Adjudicate. Refine.</h2><p>Learn to rank counterfactual evidence using visual context and response structure, then recover motion through localized decoding.</p></div></div><figure><div class="figure-panel"><div class="figure-inner"><img src="assets/figures/method-2027.png" alt="LPA-CWM method: frozen CWM responses are encoded from local crops, response maps, frame pairs and statistics; a Set Transformer predicts weights before localization and one CWM re-evaluation." loading="lazy" width="3600" height="1902"></div></div><figcaption class="fig-caption"><b>Figure 02</b><span>APA provides an analytic reliability reference. LPA learns candidate weights from dense MOVi-F trajectories, with the CWM predictor and intervention generator frozen.</span></figcaption></figure><div class="steps"><article class="step"><span class="mono">01 / CANDIDATES</span><h3>Multiple views of motion</h3><p>Compare factual and intervened predictions under different target-frame masks to construct candidate responses.</p></article><article class="step"><span class="mono">02 / RELIABILITY</span><h3>A learned physical adjudicator</h3><p>A Set Transformer jointly compares local RGB, response shape, frame-pair context, and candidate statistics.</p></article><article class="step"><span class="mono">03 / REFINEMENT</span><h3>Localize, then re-evaluate</h3><p>Weighted responses undergo windowed localization and one paired CWM re-evaluation to recover the final motion.</p></article></div></div></section>
 <section id="multi-point"><div class="wrap"><div class="section-head"><div class="chapter">03 · Multi-point Tracking</div><div><h2>Many points. One coherent picture.</h2><p>LPA-CWM tracks multiple points across eight tasks, with three episodes per task.</p></div></div><div id="multiGallery" class="gallery-grid" aria-label="Eight LPA-CWM tasks, three episodes each"></div></div></section>
 <section id="single-point"><div class="wrap">
@@ -143,8 +152,8 @@ footer .back-top:hover,footer .back-top:focus-visible{background:var(--tint);tra
 <script>
 'use strict';
 // ASSET CONFIGURATION. Empty sources deliberately render TODO cards, without broken media requests.
-// The overview film can be added here when available.
-const MEDIA={heroVideo:'assets/videos/hero-motion.mp4',overviewVideo:'',overviewImage:'assets/figures/overview-2027.png'};
+// Overview film and manuscript figure.
+const MEDIA={heroVideo:'assets/videos/hero-motion.mp4',overviewVideo:'assets/videos/LPA-CWM.mp4',overviewImage:'assets/figures/overview-2027.png'};
 // Three selected LPA-CWM episodes per task, in presentation order.
 const MULTI_TASKS=[
   {
@@ -377,8 +386,52 @@ if(MEDIA.heroVideo){
  function label(){button.textContent=playing?'Ⅱ Pause background':'▷ Play background';button.setAttribute('aria-label',(playing?'Pause':'Play')+' background video')}
  button.onclick=()=>{playing=!playing;v.dataset.manualPaused=String(!playing);if(playing)v.play().catch(()=>{});else v.pause();label()};label();
 }
-function overview(mode){clearVideos($('#overviewStage'));const isVideo=mode==='video';$('#showVideo').setAttribute('aria-pressed',String(isVideo));$('#showImage').setAttribute('aria-pressed',String(!isVideo));$('#overviewLabel').textContent=isVideo?'Overview film':'Research overview';$('#overviewHint').textContent=isVideo?(MEDIA.overviewVideo?'Motion reasoning in action':'Video preview · Coming soon'):'Figure 1 · From the manuscript';$('#overviewStage').innerHTML=isVideo?'<div class="placeholder"><div class="play-orbit" aria-hidden="true">▷</div><p class="placeholder-title">Motion, made visible.</p><p class="placeholder-note">TODO · Overview video</p><p class="placeholder-note">Switch to Image to explore the paper overview</p></div>':'<img src="'+escaped(MEDIA.overviewImage)+'" alt="Paper overview of motion tracking failures, the Learned Physical Adjudicator, and the CMC evaluation protocol.">';if(isVideo&&MEDIA.overviewVideo)attachVideo($('#overviewStage'),MEDIA.overviewVideo,'Overview film')}
-$('#showVideo').onclick=()=>overview('video');$('#showImage').onclick=()=>overview('image');overview(MEDIA.overviewVideo?'video':'image');
+let overviewVideo=null;
+const overviewStage=$('#overviewStage'),overviewSound=$('#overviewSound');
+function syncOverviewSound(){
+ const audible=overviewVideo&&!overviewVideo.muted&&overviewVideo.volume>0;
+ overviewSound.setAttribute('aria-pressed',String(Boolean(audible)));
+ overviewSound.setAttribute('aria-label',audible?'Turn sound off':'Turn sound on');
+ overviewSound.title=audible?'Turn sound off':'Turn sound on';
+ $('#overviewSoundLabel').textContent=audible?'Sound on':'Sound off';
+}
+function overview(mode){
+ if(overviewStage.dataset.mode===mode)return;
+ const isVideo=mode==='video';
+ if(overviewVideo){videoObserver.unobserve(overviewVideo);overviewVideo.pause()}
+ overviewStage.replaceChildren();overviewStage.dataset.mode=mode;
+ overviewStage.style.removeProperty('aspect-ratio');
+ $('#showVideo').setAttribute('aria-pressed',String(isVideo));
+ $('#showImage').setAttribute('aria-pressed',String(!isVideo));
+ overviewSound.hidden=!isVideo;
+ $('#overviewLabel').textContent=isVideo?'Overview film':'Research overview';
+ $('#overviewHint').textContent=isVideo?'Motion reasoning in action':'Figure 1 · From the manuscript';
+ if(isVideo){
+  if(!overviewVideo){
+   overviewVideo=attachVideo(overviewStage,MEDIA.overviewVideo,'LPA-CWM overview film');
+   overviewVideo.width=1920;overviewVideo.height=1080;
+   overviewVideo.controls=true;
+   overviewVideo.addEventListener('volumechange',syncOverviewSound);
+   overviewVideo.addEventListener('loadedmetadata',()=>{if(overviewStage.dataset.mode==='video')overviewStage.style.aspectRatio=overviewVideo.videoWidth+' / '+overviewVideo.videoHeight});
+  }else{
+   overviewStage.append(overviewVideo);videoObserver.observe(overviewVideo);
+   if(overviewVideo.videoWidth)overviewStage.style.aspectRatio=overviewVideo.videoWidth+' / '+overviewVideo.videoHeight;
+  }
+  syncOverviewSound();
+ }else{
+  const image=document.createElement('img');image.src=MEDIA.overviewImage;
+  image.alt='Paper overview of motion tracking failures, the Learned Physical Adjudicator, and the CMC evaluation protocol.';
+  overviewStage.append(image);
+ }
+}
+overviewSound.onclick=()=>{
+ if(!overviewVideo)return;
+ const audible=!overviewVideo.muted&&overviewVideo.volume>0;
+ overviewVideo.muted=audible;
+ if(!audible&&overviewVideo.volume===0)overviewVideo.volume=1;
+ syncOverviewSound();
+};
+$('#showVideo').onclick=()=>overview('video');$('#showImage').onclick=()=>overview('image');overview('video');
 let singleFilter='drift',singleMethods='featured';
 function tile(method,scene,showTitle=true){const [key,label]=method;return '<div class="video-tile">'+(showTitle?'<div class="video-title '+(key==='lpa'?'ours-label':'')+'"><span>'+escaped(label)+'</span>'+(key==='lpa'?'<span>Ours</span>':'')+'</div>':'')+'<div class="video-slot" data-key="'+key+'"><span class="slot-icon" aria-hidden="true">▷</span><span class="slot-label">TODO · VIDEO</span></div></div>'}
 function bindEpisodePlayback(article,videos,title){
