@@ -115,8 +115,10 @@ footer .back-top:hover,footer .back-top:focus-visible{background:var(--tint);tra
 #overviewStage[data-mode="video"]{aspect-ratio:16/9;padding:0;background:#10131b}
 #overviewStage[data-mode="video"] video{width:100%;height:100%;object-fit:contain;padding:0}
 .overview-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.overview-sound{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:8px 14px;border:1px solid var(--line);border-radius:24px;background:var(--surface);color:var(--muted);font-size:12px}
-.overview-sound:hover,.overview-sound[aria-pressed="true"]{color:var(--accent);background:var(--tint)}
+.overview-sound{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:8px 14px;border:1.5px solid var(--accent);border-radius:24px;background:var(--surface);color:var(--accent);font-size:12px;font-weight:600;box-shadow:0 2px 7px color-mix(in srgb,var(--accent) 10%,transparent);transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
+.overview-sound[aria-pressed="true"]{background:var(--tint)}
+.overview-sound:hover,.overview-sound:focus-visible{background:var(--tint);transform:translateY(-3px);box-shadow:0 7px 16px color-mix(in srgb,var(--accent) 24%,transparent)}
+@media(prefers-reduced-motion:reduce){.overview-sound{transition:none}.overview-sound:hover,.overview-sound:focus-visible{transform:none}}
 .overview-sound svg{width:18px;height:18px;flex-shrink:0}
 .overview-sound[aria-pressed="false"] .sound-on,.overview-sound[aria-pressed="true"] .sound-off{display:none}
 </style>
