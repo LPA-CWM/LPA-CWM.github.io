@@ -155,7 +155,7 @@ footer .back-top:hover,footer .back-top:focus-visible{background:var(--tint);tra
 'use strict';
 // ASSET CONFIGURATION. Empty sources deliberately render TODO cards, without broken media requests.
 // Overview film and manuscript figure.
-const MEDIA={heroVideo:'assets/videos/hero-motion.mp4',overviewVideo:'assets/videos/LPA-CWM.mp4',overviewImage:'assets/figures/overview-2027.png'};
+const MEDIA={heroVideo:'assets/videos/hero-motion.mp4',overviewVideo:'assets/videos/LPA-CWM.mp4?v=faststart1',overviewImage:'assets/figures/overview-2027.png'};
 // Three selected LPA-CWM episodes per task, in presentation order.
 const MULTI_TASKS=[
   {
@@ -379,14 +379,35 @@ setTheme(document.documentElement.dataset.theme);$$('.theme button').forEach(b=>
 const navLinks=$$('.nav-links a'),sections=$$('main section');let ticking=false;
 function updateScroll(){const total=document.documentElement.scrollHeight-innerHeight;$('#readingProgress').style.width=(total>0?Math.min(100,scrollY/total*100):0)+'%';let current=null;sections.forEach(s=>{if(s.getBoundingClientRect().top<=180)current=s.id});if(innerHeight+scrollY>=document.documentElement.scrollHeight-4)current='citation';navLinks.forEach(a=>{const active=a.hash==='#'+current;a.classList.toggle('active',active);if(active)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current')});ticking=false}
 addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(updateScroll);ticking=true}},{passive:true});addEventListener('resize',updateScroll);updateScroll();
-const videoObserver=new IntersectionObserver(entries=>entries.forEach(({target:v,isIntersecting})=>{if(!isIntersecting)v.pause();else if(!reduced&&v.dataset.manualPaused!=='true')v.play().catch(()=>{})}),{threshold:.2});
-function attachVideo(parent,src,label){const v=document.createElement('video');v.muted=true;v.loop=true;v.playsInline=true;v.controls=true;v.preload='metadata';v.setAttribute('aria-label',label);v.src=src;v.addEventListener('loadeddata',()=>parent.querySelectorAll('.slot-icon,.slot-label,.placeholder').forEach(e=>e.hidden=true));v.addEventListener('error',()=>{v.hidden=true;const note=parent.querySelector('.slot-label,.placeholder-note');if(note)note.textContent='TODO · Video unavailable'});parent.append(v);videoObserver.observe(v);return v}
-function clearVideos(parent){parent.querySelectorAll('video').forEach(v=>{videoObserver.unobserve(v);v.pause();v.removeAttribute('src');v.load()})}
+// Overview begins buffering immediately. Demo URLs stay dormant until needed.
+function loadVideo(v){
+ if(!v.dataset.src||v.getAttribute('src'))return;
+ v.preload=v.dataset.preload||'metadata';v.src=v.dataset.src;v.load();
+}
+const videoLoadObserver=new IntersectionObserver(entries=>entries.forEach(({target:v,isIntersecting})=>{
+ if(isIntersecting){loadVideo(v);videoLoadObserver.unobserve(v)}
+}),{rootMargin:'200px 0px',threshold:0});
+const videoObserver=new IntersectionObserver(entries=>entries.forEach(({target:v,isIntersecting})=>{
+ if(!isIntersecting)v.pause();
+ else{loadVideo(v);if(!reduced&&v.dataset.manualPaused!=='true')v.play().catch(()=>{})}
+}),{threshold:.2});
+function attachVideo(parent,src,label,{priority=false}={}){
+ const v=document.createElement('video');v.muted=true;v.loop=true;v.playsInline=true;v.controls=true;
+ v.preload='none';v.dataset.src=src;v.dataset.preload=priority?'auto':'metadata';v.setAttribute('aria-label',label);
+ v.addEventListener('loadeddata',()=>parent.querySelectorAll('.slot-icon,.slot-label,.placeholder').forEach(e=>e.hidden=true));
+ v.addEventListener('error',()=>{v.hidden=true;const note=parent.querySelector('.slot-label,.placeholder-note');if(note)note.textContent='Video unavailable'});
+ parent.append(v);
+ if(priority)loadVideo(v);else videoLoadObserver.observe(v);
+ videoObserver.observe(v);return v;
+}
+function clearVideos(parent){parent.querySelectorAll('video').forEach(v=>{
+ videoLoadObserver.unobserve(v);videoObserver.unobserve(v);v.pause();delete v.dataset.src;v.removeAttribute('src');v.load();
+})}
 if(MEDIA.heroVideo){
  const v=attachVideo($('#heroBackdrop'),MEDIA.heroVideo,'Eight-task motion reel');v.controls=false;v.poster='assets/videos/hero-motion-poster.jpg';
  const button=$('#heroPlayback');let playing=!reduced;
  function label(){button.textContent=playing?'Ⅱ Pause background':'▷ Play background';button.setAttribute('aria-label',(playing?'Pause':'Play')+' background video')}
- button.onclick=()=>{playing=!playing;v.dataset.manualPaused=String(!playing);if(playing)v.play().catch(()=>{});else v.pause();label()};label();
+ button.onclick=()=>{playing=!playing;v.dataset.manualPaused=String(!playing);if(playing){loadVideo(v);v.play().catch(()=>{})}else v.pause();label()};label();
 }
 let overviewVideo=null;
 const overviewStage=$('#overviewStage'),overviewSound=$('#overviewSound');
@@ -410,7 +431,7 @@ function overview(mode){
  $('#overviewHint').textContent=isVideo?'Motion reasoning in action':'Figure 1 · From the manuscript';
  if(isVideo){
   if(!overviewVideo){
-   overviewVideo=attachVideo(overviewStage,MEDIA.overviewVideo,'LPA-CWM overview film');
+   overviewVideo=attachVideo(overviewStage,MEDIA.overviewVideo,'LPA-CWM overview film',{priority:true});
    overviewVideo.width=1920;overviewVideo.height=1080;
    overviewVideo.controls=true;
    overviewVideo.addEventListener('volumechange',syncOverviewSound);
@@ -435,12 +456,12 @@ overviewSound.onclick=()=>{
 };
 $('#showVideo').onclick=()=>overview('video');$('#showImage').onclick=()=>overview('image');overview('video');
 let singleFilter='drift',singleMethods='featured';
-function tile(method,scene,showTitle=true){const [key,label]=method;return '<div class="video-tile">'+(showTitle?'<div class="video-title '+(key==='lpa'?'ours-label':'')+'"><span>'+escaped(label)+'</span>'+(key==='lpa'?'<span>Ours</span>':'')+'</div>':'')+'<div class="video-slot" data-key="'+key+'"><span class="slot-icon" aria-hidden="true">▷</span><span class="slot-label">TODO · VIDEO</span></div></div>'}
+function tile(method,scene,showTitle=true){const [key,label]=method;return '<div class="video-tile">'+(showTitle?'<div class="video-title '+(key==='lpa'?'ours-label':'')+'"><span>'+escaped(label)+'</span>'+(key==='lpa'?'<span>Ours</span>':'')+'</div>':'')+'<div class="video-slot" data-key="'+key+'"><span class="slot-icon" aria-hidden="true">▷</span><span class="slot-label">Loading video</span></div></div>'}
 function bindEpisodePlayback(article,videos,title){
  let playing=!reduced;
  const control=article.querySelector('.playback');
  function label(){control.textContent=playing?'Ⅱ Pause':'▷ Play';control.setAttribute('aria-label',(playing?'Pause ':'Play ')+title)}
- function playAll(restart=false){playing=true;videos.forEach(v=>{v.dataset.manualPaused='false';if(restart)v.currentTime=0;v.play().catch(()=>{})});label()}
+ function playAll(restart=false){playing=true;videos.forEach(v=>{v.dataset.manualPaused='false';loadVideo(v);if(restart)v.currentTime=0;v.play().catch(()=>{})});label()}
  control.onclick=()=>{if(playing){playing=false;videos.forEach(v=>{v.dataset.manualPaused='true';v.pause()});label()}else playAll()};
  article.querySelector('.restart').onclick=()=>playAll(true);
  label();
